@@ -1,8 +1,8 @@
 {
-	"id": "input-materialdesign",
-	"name": "input-materialdesign",
+	"id": "dinaboom-inputMaterialDesign",
+	"name": "dinaboom-inputMaterialDesign",
 	"description" : "Google's Material Design, input or textfield concept material design",
-	"author": "Nádson Fernando",
+	"author": "Alisson Chiquitto",
 	"version": "1.0",
 	"copyright":"Copyright (c) 2015",
 	"license":"Public Domain",
