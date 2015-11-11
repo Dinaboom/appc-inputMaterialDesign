@@ -1,8 +1,50 @@
-/** @author: Nádson Fernando 
- *  @email: nadsonfernando1@gmail.com 
+/** @author: Nádson Fernando
+ *  @email: nadsonfernando1@gmail.com
  *  @description: controller input
- *  @version: 1.0 
+ *  @version: 1.0
  */
+
+var objectStyles = {
+	footer : {
+		backgroundColor : '#000000',
+		height : 1,
+		opacity : 0.83,
+		top : 64,
+	},
+	footerUp : {
+		backgroundColor : '#2196F3',
+		height : 2,
+		opacity : 0.83,
+		top : 63,
+	},
+	// Default style
+	hintDown : {
+		color : '#000000',
+		font : {
+			fontSize : 16
+		},
+		opacity : 0.38,
+		top : 40
+	},
+	// Style for focus in textfield
+	hintFocus : {
+		color : '#2196F3',
+		font : {
+			fontSize : 12
+		},
+		opacity : 0.83,
+		top : 16,
+	},
+	// Style to the non-empty textfield
+	hintUp : {
+		color : '#000000',
+		font : {
+			fontSize : 12
+		},
+		opacity : 0.38,
+		top : 16,
+	},
+};
 
 //arguments
 var args = arguments[0] || {};
@@ -15,8 +57,8 @@ var _config = {
 		exceedingColor : "FF0000"
 	},
 	duration : 200,
-	editable: true,
-	exceeding: false
+	editable : true,
+	exceeding : false
 };
 
 //declare events in object
@@ -28,60 +70,58 @@ var _events = {
 };
 
 var _animation = {
-	
+
 	//animation up
 	ANIMATION_UP : function() {
-		if(!_config.editable) 
+		if (!_config.editable)
 			return;
-		
+
 		var lenHint = _.size($.hint.getText());
 		var color = _config.exceeding ? _config.color.exceeding : _config.color.post;
 		lenHint += lenHint * (Number(lenHint) > 25 ? 0.20 : 0.10);
-		
 
-		$.hint.animate({
-			"top" : 0,
-			"color" : color,
-			"transform" : Ti.UI.create2DMatrix().scale(0.7),
-			"left" : Ti.Platform.osname == "android" ? (-lenHint + 2) : -lenHint, //Fix hint being cut off on Android
-			"duration" : _config.duration
-		});
-
-		$.footer.animate({
-			"backgroundColor" : color,
-		});
+		hintStyleApply(objectStyles.hintFocus, 1);
+		footerStyleApply(objectStyles.footerUp, 1);
 	},
-	
+
 	//animation down
 	ANIMATION_DOWN : function() {
-		if(!_config.editable) 
+		if (!_config.editable)
 			return;
-		
+
 		var lenHint = _.size($.hint.getText());
 		var color = _config.exceeding ? _config.color.exceeding : _config.color.pattern;
 		lenHint += lenHint * (Number(lenHint) > 25 ? 0.20 : 0.10);
-		
-		$.footer.animate({
-			"backgroundColor" : color
-		});
 
-		var attrsHint = {
-			"top" : $.textfield.top,
-			"color" : color,
-			"transform" : Ti.UI.create2DMatrix().scale(1),
-			"left" : 0,
-			"duration" : _config.duration
-		};
+		footerStyleApply(objectStyles.footer, 1);
 
-		if ($.textfield.getValue()) {
-
-			attrsHint["top"] = 0;
-			attrsHint["transform"] = Ti.UI.create2DMatrix().scale(0.7);
-			attrsHint["left"] = -lenHint;
+		if (!$.textfield.getValue()) {
+			hintStyleApply(objectStyles.hintDown, 1);
 		}
-		$.hint.animate(attrsHint);
+		else {
+			hintStyleApply(objectStyles.hintUp, 1);
+		}
+
 	}
 };
+
+function footerStyleApply(style, type) {
+	if (type == 0) {
+		$.footer.applyProperties(style);
+	} else if (type == 1) {
+		style.duration = _config.duration;
+		$.footer.animate(style);
+	}
+}
+
+function hintStyleApply(style, type) {
+	if (type == 0) {
+		$.hint.applyProperties(style);
+	} else if (type == 1) {
+		style.duration = _config.duration;
+		$.hint.animate(style);
+	}
+}
 
 //Exports Methods
 exports.getValue = function() {
@@ -109,11 +149,11 @@ exports.listener = function(event, callback) {
 	});
 };
 
-exports.blur = function( toFocus ){
+exports.blur = function(toFocus) {
 	$.textfield.blur();
 };
 
-exports.focus = function(){
+exports.focus = function() {
 	$.textfield.focus();
 };
 
@@ -124,8 +164,9 @@ $.textfield.addEventListener(_events.BLUR, _animation.ANIMATION_DOWN);
 
 	_config.color.post = args.colorFocus || _config.color.post;
 	_config.color.pattern = args.colorPattern || _config.color.pattern;
-	_config.color.exceeding = args.exceedingColor || "#FF0000"; //red
-	
+	_config.color.exceeding = args.exceedingColor || "#FF0000";
+	//red
+
 	_config.duration = args.animationDuration || _config.duration;
 
 	var _init = {
@@ -136,15 +177,15 @@ $.textfield.addEventListener(_events.BLUR, _animation.ANIMATION_DOWN);
 		right : args.right,
 		bottom : args.bottom,
 		colorFont : args.colorFont,
-		keyboardType: args.keyboardType,
-		returnKey: args.returnKey,
-		password: args.password,
-		editable: args.editable,
-		maxLength: args.maxLength,
-		minLength: args.minLength
+		keyboardType : args.keyboardType,
+		returnKey : args.returnKey,
+		password : args.password,
+		editable : args.editable,
+		maxLength : args.maxLength,
+		minLength : args.minLength
 	};
-	
-	if(typeof _init.editable == "string")
+
+	if ( typeof _init.editable == "string")
 		_init.editable = eval(_init.editable);
 
 	if (!_init.titleHint)
@@ -171,77 +212,17 @@ $.textfield.addEventListener(_events.BLUR, _animation.ANIMATION_DOWN);
 	if (_init.colorFont)
 		$.textfield.setColor(_init.colorFont);
 
-	if(_init.keyboardType)
+	if (_init.keyboardType)
 		$.textfield.setKeyboardType(_init.keyboardType);
 
-	if(_init.returnKey)
+	if (_init.returnKey)
 		$.textfield.setReturnKeyType(_init.returnKey);
 
-	if(_init.password)
+	if (_init.password)
 		$.textfield.setPasswordMask(_init.password);
 
 	$.hint.setText(_init.titleHint);
-	$.hint.setColor(_config.color.pattern);
-	$.footer.setBackgroundColor(_config.color.pattern);
-	
-	if(_init.editable == false) {
-		$.container.setOpacity(0.3);
-		$.textfield.setEditable(false);
-		
-		_config.editable = false;
-	}
-	
-	if(_init.maxLength > 0) {
-		
-		//Create counter label
-		var counter = Ti.UI.createLabel({
-			height: 		15,
-			width: 			64,
-			font: {
-				fontSize: 	11
-			},
-			opacity: 		0.7,
-			right: 			-64, //Stay out of the screen on init, will animate in upon change event
-			textAlign: 		"right",
-			bottom: 		0
-		});
-		$.container.add(counter);
-		
-		//Add on change event listener
-		$.textfield.addEventListener(_events.CHANGE, function(event){
-			var length = event.value.length;
-			
-			//Animate check
-			if(length == 0){
-				counter.animate( { right:-64, duration:350}); //Animate out
-				return;
-			}else if(length == 1)
-				counter.animate( { right:0, duration:350}); //Animate in
-				
-			//Check minLength value or maxLength value
-			if(length < _init.minLength || length > _init.maxLength){
-				
-				//Set flag for next focus / blur event
-				_config.exceeding = true;
-				
-				//Set exceeding color
-				$.footer.backgroundColor = _config.color.exceeding;
-				counter.color = _config.color.exceeding;
-				$.hint.color = _config.color.exceeding;
-				
-			}else if($.footer.backgroundColor != _config.color.post){
-				
-				//Set flag for next focus / blur event
-				_config.exceeding = false;
-				
-				//Reset to color back to normal1			
-				$.footer.backgroundColor = _config.color.post;
-				counter.color = "#000";
-				$.hint.color = _config.color.post;
-			}
-			
-			//Update label
-			counter.setText(length + " / " + _init.maxLength);
-		});
-	}
+
+	hintStyleApply(objectStyles.hintDown, 0);
+	footerStyleApply(objectStyles.footer, 0);
 })();
