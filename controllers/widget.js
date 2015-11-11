@@ -1,6 +1,6 @@
-/** @author: Nádson Fernando
- *  @email: nadsonfernando1@gmail.com
- *  @description: controller input
+/** @author: Alisson Chiquitto
+ *  @email: chiquitto@gmail.com
+ *  @description: Google Material Design Text Field Floating Label
  *  @version: 1.0
  */
 
@@ -8,7 +8,7 @@ var objectStyles = {
 	footer : {
 		backgroundColor : '#000000',
 		height : 1,
-		opacity : 0.83,
+		opacity : 0.38,
 		top : 64,
 	},
 	footerUp : {
@@ -97,8 +97,7 @@ var _animation = {
 
 		if (!$.textfield.getValue()) {
 			hintStyleApply(objectStyles.hintDown, 1);
-		}
-		else {
+		} else {
 			hintStyleApply(objectStyles.hintUp, 1);
 		}
 
@@ -120,6 +119,10 @@ function hintStyleApply(style, type) {
 	} else if (type == 1) {
 		style.duration = _config.duration;
 		$.hint.animate(style);
+
+		if (OS_ANDROID) {
+			require('animateColor').animateColor($.hint, style.color, 200);
+		}
 	}
 }
 
@@ -209,8 +212,8 @@ $.textfield.addEventListener(_events.BLUR, _animation.ANIMATION_DOWN);
 	if (_init.right)
 		$.container.setRight(_init.right);
 
-	if (_init.colorFont)
-		$.textfield.setColor(_init.colorFont);
+	//if (_init.colorFont)
+	//	$.textfield.setColor(_init.colorFont);
 
 	if (_init.keyboardType)
 		$.textfield.setKeyboardType(_init.keyboardType);
@@ -225,4 +228,5 @@ $.textfield.addEventListener(_events.BLUR, _animation.ANIMATION_DOWN);
 
 	hintStyleApply(objectStyles.hintDown, 0);
 	footerStyleApply(objectStyles.footer, 0);
+
 })();

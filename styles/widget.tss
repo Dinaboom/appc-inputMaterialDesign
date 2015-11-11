@@ -14,7 +14,7 @@
 },
 
 "#container[platform=android]": {
-	windowSoftInputMode: Ti.UI.Android.SOFT_INPUT_STATE_HIDDEN//Stops auto focus on textfield
+	// windowSoftInputMode: Ti.UI.Android.SOFT_INPUT_STATE_ALWAYS_HIDDEN //Stops auto focus on textfield
 },
 
 /**
@@ -30,10 +30,23 @@
 	top: 40,
 	width: Titanium.UI.FILL,
 },
+"#textfield[platform=android]": {
+	backgroundColor: 'transparent',
+	// backgroundColor: 'red',
+	borderStyle : Titanium.UI.INPUT_BORDERSTYLE_NONE,
+	height: 40,
+	top: 32,
+	verticalAlign: Titanium.UI.TEXT_VERTICAL_ALIGNMENT_BOTTOM,
+	// visible: false,
+},
 
 "#hint": {
+	backgroundColor: 'transparent',
 	height: 16,
 	left: 0,
+},
+"#hint[platform=android]": {
+	height: 18,
 },
 
 /**
