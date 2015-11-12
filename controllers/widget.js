@@ -121,7 +121,7 @@ function hintStyleApply(style, type) {
 		$.hint.animate(style);
 
 		if (OS_ANDROID) {
-			require('animateColor').animateColor($.hint, style.color, 200);
+			require(WPATH('animateColor')).animateColor($.hint, style.color, 200);
 		}
 	}
 }
